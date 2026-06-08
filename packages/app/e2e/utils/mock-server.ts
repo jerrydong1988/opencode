@@ -22,6 +22,7 @@ export interface MockServerConfig {
   onMessages?: (input: { sessionID: string; before?: string; phase: "start" | "end" }) => void
   events?: () => unknown[]
   eventRetry?: number
+  vcsDiff?: unknown[]
 }
 
 export async function mockOpenCodeServer(page: Page, config: MockServerConfig) {
@@ -53,6 +54,7 @@ export async function mockOpenCodeServer(page: Page, config: MockServerConfig) {
     if (path === "/global/event" || path === "/event") return sse(route, config.events?.(), config.eventRetry)
     if (path === "/global/health") return json(route, { healthy: true })
     if (emptyObject.has(path)) return json(route, {})
+    if (path === "/vcs/diff") return json(route, config.vcsDiff ?? [])
     if (emptyList.has(path)) return json(route, [])
     if (path in staticRoutes) return json(route, staticRoutes[path])
 
