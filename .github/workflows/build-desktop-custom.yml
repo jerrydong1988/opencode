@@ -26,16 +26,20 @@ jobs:
 
       - name: Install dependencies
         run: bun install
+        env:
+          OPENCODE_CHANNEL: prod
 
       - name: Build desktop app
         run: bun run --cwd packages/desktop build
         env:
           NODE_ENV: production
+          OPENCODE_CHANNEL: prod
 
       - name: Package desktop app
         run: bun run --cwd packages/desktop package
         env:
           NODE_ENV: production
+          OPENCODE_CHANNEL: prod
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
