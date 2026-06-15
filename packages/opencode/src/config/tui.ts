@@ -257,7 +257,10 @@ export const layer = Layer.effect(
   }).pipe(Effect.withSpan("TuiConfig.layer")),
 )
 
-export const defaultLayer = layer.pipe(Layer.provide(Npm.defaultLayer), Layer.provide(FSUtil.defaultLayer))
+export const defaultLayer = layer.pipe(
+  Layer.provide(Npm.defaultLayer),
+  Layer.provide(FSUtil.defaultLayer),
+)
 
 const { runPromise } = makeRuntime(Service, defaultLayer)
 
