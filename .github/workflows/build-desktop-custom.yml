@@ -36,7 +36,7 @@ jobs:
           OPENCODE_CHANNEL: prod
 
       - name: Package desktop app
-        run: bun run --cwd packages/desktop package
+        run: bun run --cwd packages/desktop package --publish=never
         env:
           NODE_ENV: production
           OPENCODE_CHANNEL: prod
