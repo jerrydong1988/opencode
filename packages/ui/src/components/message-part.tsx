@@ -2206,18 +2206,7 @@ ToolRegistry.register({
                           <Accordion.Content>
                             <Show when={active()}>
                               <div data-component="apply-patch-file-diff">
-<<<<<<< HEAD
-                                <Dynamic
-                                  component={fileComponent}
-                                  mode="diff"
-                                  virtualize={props.virtualizeDiff}
-                                  fileDiff={file.view.fileDiff}
-                                  hunkSeparators={file.view.fileDiff.isPartial ? "simple" : "line-info-basic"}
-                                  onRendered={props.onContentRendered}
-                                />
-=======
-                                <PreparedToolDiff source={file.source} virtualize={props.virtualizeDiff} />
->>>>>>> 4dd2daa7e (fix(ui): prepare diffs off the render thread)
+<PreparedToolDiff source={file.source} virtualize={props.virtualizeDiff} />
                               </div>
                             </Show>
                           </Accordion.Content>
