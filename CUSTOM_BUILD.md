@@ -2,7 +2,7 @@
 
 > **Purpose:** Temporary fork of [anomalyco/opencode](https://github.com/anomalyco/opencode) with two unmerged renderer-freeze fixes, until they land in an official release.
 >
-> **Branch:** `custom-frozen-fix-v2` (based on `v1.17.7`)
+> **Branch:** `custom-frozen-fix-v3` (based on `v1.17.8`)
 >
 > **Maintainer:** [jerrydong1988](https://github.com/jerrydong1988)
 
