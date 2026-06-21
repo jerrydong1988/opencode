@@ -2,7 +2,7 @@ import { parseCommentNote, readCommentMetadata } from "@/utils/comment-note"
 import { AssistantMessage, Part, SessionStatus, UserMessage } from "@opencode-ai/sdk/v2"
 import { groupParts, PartGroup, renderable } from "@opencode-ai/session-ui/message-part"
 import { Data, Equal } from "effect"
-import { dedupeSummaryDiffs, type SummaryDiff } from "./message-timeline.diffs"
+import { dedupeSummaryDiffs, type SummaryDiff } from "../message-timeline.diffs"
 
 export type { SummaryDiff }
 
