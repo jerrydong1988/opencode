@@ -1,4 +1,5 @@
-import type { DiffSource, PreparedDiff } from "../components/session-diff"
+type DiffSource = { file: string; patch?: string; before?: string; after?: string }
+type PreparedDiff = { fileDiff: any; deletions: string; additions: string }
 
 export type DiffWorkerRequest = {
   id: number

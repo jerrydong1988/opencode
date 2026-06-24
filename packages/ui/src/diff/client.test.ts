@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { DiffPreparation } from "./client-core"
-import { prepareDiff } from "../components/session-diff"
+import { prepareDiff } from "./worker"
 import type { DiffWorkerRequest, DiffWorkerResponse } from "./protocol"
 
 class FakeWorker {

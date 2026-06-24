@@ -1,5 +1,7 @@
-import type { DiffSource, PreparedDiff } from "../components/session-diff"
 import type { DiffWorkerRequest, DiffWorkerResponse } from "./protocol"
+
+type DiffSource = { file: string; patch?: string; before?: string; after?: string }
+type PreparedDiff = { fileDiff: any; deletions: string; additions: string }
 
 type WorkerLike = {
   postMessage(message: DiffWorkerRequest): void

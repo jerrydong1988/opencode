@@ -1,5 +1,5 @@
 import { createMemo, createResource, type Accessor } from "solid-js"
-import type { DiffSource } from "../components/session-diff"
+type DiffSource = { file: string; patch?: string; before?: string; after?: string }
 import { prepareDiff } from "./client"
 import { snapshotSource } from "./client-core"
 

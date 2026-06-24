@@ -1,5 +1,6 @@
-import type { DiffSource } from "../components/session-diff"
 import { DiffPreparation } from "./client-core"
+
+type DiffSource = { file: string; patch?: string; before?: string; after?: string }
 
 let client: DiffPreparation | undefined
 
