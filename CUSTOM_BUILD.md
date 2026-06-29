@@ -1,8 +1,8 @@
-﻿# OpenCode Desktop - Custom Frozen Fix Build
+# OpenCode Desktop - Custom Frozen Fix Build
 
 > **Purpose:** Temporary fork of [anomalyco/opencode](https://github.com/anomalyco/opencode) with two unmerged renderer-freeze fixes, until they land in an official release.
 >
-> **Branch:** `custom-frozen-fix-v8` (based on `upstream/dev`)
+> **Branch:** `custom-frozen-fix-v9` (based on `upstream/dev`)
 >
 > **Maintainer:** jerrydong1988
 
@@ -86,7 +86,7 @@ bash scripts/custom-rebase.sh v1.18.0              # replace with new tag
 
 The fork has a CI workflow that builds the Desktop installer automatically:
 
-1. Push to a branch matching `custom-*` (e.g., `custom-frozen-fix-v8`)
+1. Push to a branch matching `custom-*` (e.g., `custom-frozen-fix-v9`)
 2. The workflow `.github/workflows/build-desktop-custom.yml` triggers
 3. Environment: `OPENCODE_CHANNEL=prod` (so appId and database path match the official release)
 4. Package: `bun run --cwd packages/desktop package --publish=never`
