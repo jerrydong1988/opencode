@@ -55,7 +55,7 @@ import type {
 import { showToast } from "@/utils/toast"
 import { getDirectory, getFilename } from "@opencode-ai/core/util/path"
 import { Popover as KobaltePopover } from "@kobalte/core/popover"
-import { createPreparedDiff } from "@opencode-ai/ui/diff/resource" (fix(ui): prepare diffs off the render thread)
+ import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
 import { useFileComponent } from "@opencode-ai/ui/context/file"
 import { shouldMarkBoundaryGesture, normalizeWheelDelta } from "@/pages/session/message-gesture"
 import { SessionContextUsage } from "@/components/session-context-usage"
