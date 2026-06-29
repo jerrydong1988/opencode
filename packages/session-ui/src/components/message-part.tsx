@@ -352,7 +352,7 @@ function getDirectory(path: string | undefined) {
 
 import type { IconProps } from "@opencode-ai/ui/icon"
 import type { DiffSource } from "./session-diff"
-import { createPreparedDiff } from "---PLACEHOLDER---/diff/resource"
+ import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
 
 function PreparedToolDiff(props: { source: DiffSource; virtualize?: boolean }) {
   const fileComponent = useFileComponent()

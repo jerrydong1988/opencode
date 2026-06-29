@@ -22,9 +22,9 @@ import { Icon } from "@opencode-ai/ui/icon"
 import { TextShimmer } from "@opencode-ai/ui/text-shimmer"
 import { SessionRetry } from "./session-retry"
 import { TextReveal } from "@opencode-ai/ui/text-reveal"
-import { createAutoScroll } from "---PLACEHOLDER---/hooks"
-import { useI18n } from "---PLACEHOLDER---/context/i18n"
-import { createPreparedDiff } from "---PLACEHOLDER---/diff/resource"
+ import { createAutoScroll } from "@opencode-ai/ui/hooks"
+ import { useI18n } from "@opencode-ai/ui/context/i18n"
+ import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
 
 function SessionTurnDiffView(props: { diff: SnapshotFileDiff & { file: string } }) {
   const fileComponent = useFileComponent()
