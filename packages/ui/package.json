@@ -35,11 +35,7 @@
   "exports": {
     "./package.json": "./package.json",
     "./*": "./src/components/*.tsx",
-<<<<<<< HEAD
-=======
-    "./session-diff": "./src/components/session-diff.ts",
     "./diff/*": "./src/diff/*.ts",
->>>>>>> db86d0221 (fix(ui): prepare diffs off the render thread)
     "./i18n/*": "./src/i18n/*.ts",
     "./hooks": "./src/hooks/index.ts",
     "./context": "./src/context/index.ts",
