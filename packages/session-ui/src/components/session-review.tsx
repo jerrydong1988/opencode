@@ -24,9 +24,13 @@ import { cloneSelectedLineRange, previewSelectedLines } from "../pierre/selectio
 import { createLineCommentController } from "./line-comment-annotations"
 import type { LineCommentEditorProps } from "./line-comment"
 import type { PreparedDiff } from "./session-diff"
- import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
+import { DiffSkeleton } from "./diff-skeleton"
 
+import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
+import { prewarm } from "@opencode-ai/ui/diff/client"
+ 
 const MAX_DIFF_CHANGED_LINES = 500
+const MAX_ABSOLUTE_DIFF_LINES = 5000
 
 export type SessionReviewDiffStyle = "unified" | "split"
 
@@ -175,6 +179,10 @@ export const SessionReview = (props: SessionReviewProps) => {
   })
   const selection = () => store.selection
   const commenting = () => store.commenting
+  createEffect(() => {
+    if (typeof Worker === "undefined") return
+    prewarm()
+  })
   const opened = () => store.opened
 
   const open = () => props.open ?? store.open
@@ -351,8 +359,9 @@ export const SessionReview = (props: SessionReviewProps) => {
 
                     const tooLarge = createMemo(() => {
                       if (!expanded()) return false
-                      if (force()) return false
                       if (mediaKind()) return false
+                      if (changedLines() > MAX_ABSOLUTE_DIFF_LINES) return true
+                      if (force()) return false
                       return changedLines() > MAX_DIFF_CHANGED_LINES
                     })
 
@@ -538,6 +547,9 @@ export const SessionReview = (props: SessionReviewProps) => {
                                       </Button>
                                     </div>
                                   </div>
+                                </Match>
+                                <Match when={prepared.loading && !tooLarge()}>
+                                  <DiffSkeleton lines={changedLines()} />
                                 </Match>
                                 <Match when={prepared()}>
                                   {(value) => (
