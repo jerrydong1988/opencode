@@ -4,7 +4,7 @@ on:
   workflow_dispatch:    # 手动触发
   push:
     branches:
-      - custom-*        # 推 custom- 前缀分支自动构建
+      - custom-*        # �?custom- 前缀分支自动构建
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version-file: package.json
 
       - name: Install dependencies
         run: bun install
