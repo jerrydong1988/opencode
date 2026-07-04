@@ -1,10 +1,10 @@
 name: Build Desktop (Custom Frozen Fix)
 
 on:
-  workflow_dispatch:    # 手动触发
+  workflow_dispatch:
   push:
     branches:
-      - custom-*        # �?custom- 前缀分支自动构建
+      - custom-*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
