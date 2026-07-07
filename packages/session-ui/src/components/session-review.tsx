@@ -548,7 +548,7 @@ export const SessionReview = (props: SessionReviewProps) => {
                                     </div>
                                   </div>
                                 </Match>
-                                <Match when={prepared.loading && !tooLarge()}>
+                                <Match when={"loading" in prepared && prepared.loading && !tooLarge()}>
                                   <DiffSkeleton lines={changedLines()} />
                                 </Match>
                                 <Match when={prepared()}>
@@ -561,14 +561,13 @@ export const SessionReview = (props: SessionReviewProps) => {
                                       diffStyle={diffStyle()}
                                       onRendered={() => props.onDiffRendered?.()}
                                       enableLineSelection={props.onLineComment != null}
-                                      enableHoverUtility={props.onLineComment != null}
+                                      enableGutterUtility={props.onLineComment != null}
                                       onLineSelected={handleLineSelected}
                                       onLineSelectionEnd={handleLineSelectionEnd}
-                                      onLineNumberSelectionEnd={commentsUi.onLineNumberSelectionEnd}
                                       annotations={commentsUi.annotations()}
                                       renderAnnotation={commentsUi.renderAnnotation}
-                                      renderHoverUtility={
-                                        props.onLineComment ? commentsUi.renderHoverUtility : undefined
+                                      renderGutterUtility={
+                                        props.onLineComment ? commentsUi.renderGutterUtility : undefined
                                       }
                                       selectedLines={selectedLines()}
                                       commentedLines={commentedLines()}
