@@ -74,13 +74,24 @@ function emptyFileDiff(file: string): any {
   return parseDiffFromFile({ name: file, contents: "" }, { name: file, contents: "" })
 }
 
-// Only register the message handler inside the Web Worker, not when imported for tests
-if (typeof self !== "undefined" && "Window" in self === false) {
-  self.addEventListener("message", (event: MessageEvent<DiffWorkerRequest>) => {
+// Only register the message handler inside the Web Worker, not when imported for tests.
+type DiffWorkerScope = {
+  Window?: unknown
+  addEventListener: (type: "message", listener: (event: MessageEvent<DiffWorkerRequest>) => void) => void
+  postMessage: (message: DiffWorkerResponse) => void
+}
+const workerScope = globalThis as unknown as Partial<DiffWorkerScope>
+if (
+  typeof workerScope.addEventListener === "function" &&
+  typeof workerScope.postMessage === "function" &&
+  !("Window" in workerScope)
+) {
+  const postMessage = workerScope.postMessage
+  workerScope.addEventListener("message", (event: MessageEvent<DiffWorkerRequest>) => {
     try {
-      self.postMessage({ id: event.data.id, result: prepareDiff(event.data.source) } satisfies DiffWorkerResponse)
+      postMessage({ id: event.data.id, result: prepareDiff(event.data.source) } satisfies DiffWorkerResponse)
     } catch (error) {
-      self.postMessage({
+      postMessage({
         id: event.data.id,
         error: error instanceof Error ? error.message : String(error),
       } satisfies DiffWorkerResponse)
