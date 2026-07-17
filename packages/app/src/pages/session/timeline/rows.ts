@@ -2,7 +2,7 @@ import { parseCommentNote, readCommentMetadata } from "@/utils/comment-note"
 import { AssistantMessage, Part, SessionStatus, UserMessage } from "@opencode-ai/sdk/v2"
 import { groupParts, renderable, type PartGroup } from "@opencode-ai/session-ui/message-part"
 import { TimelineRow, type SummaryDiff } from "./timeline-row"
-import { dedupeSummaryDiffs } from "../message-timeline.diffs"
+import { uniqueSummaryDiffs } from "./summary-diffs"
 
 export { TimelineRow, type SummaryDiff } from "./timeline-row"
 
@@ -138,7 +138,7 @@ export namespace Timeline {
 
     if (isActive && status === "retry") rows.push(new TimelineRow.Retry({ userMessageID: userMessage.id }))
 
-    const diffs = dedupeSummaryDiffs(userMessage.summary?.diffs)
+    const diffs = uniqueSummaryDiffs(userMessage.summary?.diffs)
     if (diffs.length > 0 && (status === "idle" || !isActive)) {
       rows.push(
         new TimelineRow.DiffSummary({
