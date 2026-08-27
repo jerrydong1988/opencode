@@ -50,6 +50,11 @@ if ($LASTEXITCODE -ne 0) { throw "Failed to create branch" }
 # 5. Copy new (add-only) files - these NEVER conflict
 Write-Host "Adding new diff-worker files..."
 git checkout $OldBranch -- `
+  .gitignore `
+  .github/workflows/build-desktop-custom.yml `
+  CUSTOM_BUILD.md `
+  scripts/custom-rebase.ps1 `
+  scripts/custom-rebase.sh `
   packages/ui/src/diff/client-core.ts `
   packages/ui/src/diff/client.test.ts `
   packages/ui/src/diff/client.ts `
@@ -57,13 +62,8 @@ git checkout $OldBranch -- `
   packages/ui/src/diff/render-purity.test.ts `
   packages/ui/src/diff/resource.ts `
   packages/ui/src/diff/worker.ts `
-  packages/app/src/pages/session/message-timeline.diffs.ts `
-  packages/app/src/pages/session/message-timeline.diffs.test.ts `
+  packages/session-ui/src/components/diff-skeleton.tsx `
   packages/app/e2e/smoke/session-review-performance.spec.ts
-
-git checkout $OldBranch -- `
-  .github/workflows/build-desktop-custom.yml `
-  CUSTOM_BUILD.md
 
 git add -A
 git commit -m "chore: add diff worker and dedup fix files"
@@ -79,13 +79,12 @@ $Patches = @(
   "$PatchDir/packages_ui_package.json.patch"
   "$PatchDir/packages_session-ui_src_components_session-diff.ts.patch"
   "$PatchDir/packages_session-ui_src_components_session-review.tsx.patch"
+  "$PatchDir/packages_session-ui_src_components_session-review.css.patch"
   "$PatchDir/packages_session-ui_src_components_session-turn.tsx.patch"
   "$PatchDir/packages_session-ui_src_components_message-part.tsx.patch"
   "$PatchDir/packages_session-ui_src_components_apply-patch-file.ts.patch"
   "$PatchDir/packages_session-ui_src_components_apply-patch-file.test.ts.patch"
   "$PatchDir/packages_app_src_pages_session_timeline_message-timeline.tsx.patch"
-  "$PatchDir/packages_app_src_pages_session_timeline_rows.ts.patch"
-  "$PatchDir/packages_app_e2e_utils_mock-server.ts.patch"
 )
 
 $AllOk = $true
@@ -103,8 +102,9 @@ foreach ($Patch in $Patches) {
 }
 
 
-# 9. Commit applied changes
+# 8. Commit applied changes
 if ($AllOk) {
+  git add -A
   git commit -m "fix: prepare diffs off the render thread (#31309, #30441)"
 } else {
   Write-Host ""
@@ -115,7 +115,7 @@ if ($AllOk) {
   exit 1
 }
 
-# 10. Verify
+# 9. Verify
 Write-Host ""
 Write-Host "Verifying..."
 if (Test-Path ".github/workflows/build-desktop-custom.yml") { Write-Host "  [ok] workflow file" }
@@ -126,11 +126,10 @@ Write-Host ""
 
 Write-Host ""
 Write-Host "Regenerating complete-fix.patch for future rebases..."
-git diff "upstream/dev" -- `
+git diff "$NewTag" -- `
   packages/session-ui/src/components/ `
   packages/app/src/pages/session/ `
-  packages/ui/package.json `
-  packages/app/e2e/utils/mock-server.ts 
+  packages/ui/package.json
   > patches/custom/complete-fix.patch
 git add -A
 git commit -m "chore(custom): update patch files and regenerate complete-fix.patch"

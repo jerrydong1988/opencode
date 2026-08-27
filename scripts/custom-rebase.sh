@@ -40,6 +40,11 @@ git checkout -b "$NEW_BRANCH" "$NEW_TAG"
 # 4. Copy new (add-only) files - these NEVER conflict
 echo "Adding new diff-worker files..."
 git checkout "$OLD_BRANCH" -- \
+  .gitignore \
+  .github/workflows/build-desktop-custom.yml \
+  CUSTOM_BUILD.md \
+  scripts/custom-rebase.ps1 \
+  scripts/custom-rebase.sh \
   packages/ui/src/diff/client-core.ts \
   packages/ui/src/diff/client.test.ts \
   packages/ui/src/diff/client.ts \
@@ -47,13 +52,8 @@ git checkout "$OLD_BRANCH" -- \
   packages/ui/src/diff/render-purity.test.ts \
   packages/ui/src/diff/resource.ts \
   packages/ui/src/diff/worker.ts \
-  packages/app/src/pages/session/message-timeline.diffs.ts \
-  packages/app/src/pages/session/message-timeline.diffs.test.ts \
+  packages/session-ui/src/components/diff-skeleton.tsx \
   packages/app/e2e/smoke/session-review-performance.spec.ts
-
-git checkout "$OLD_BRANCH" -- \
-  .github/workflows/build-desktop-custom.yml \
-  CUSTOM_BUILD.md
 
 git add -A
 git commit -m "chore: add diff worker and dedup fix files"
@@ -64,13 +64,12 @@ PATCHES=(
   "$PATCH_DIR/packages_ui_package.json.patch"
   "$PATCH_DIR/packages_session-ui_src_components_session-diff.ts.patch"
   "$PATCH_DIR/packages_session-ui_src_components_session-review.tsx.patch"
+  "$PATCH_DIR/packages_session-ui_src_components_session-review.css.patch"
   "$PATCH_DIR/packages_session-ui_src_components_session-turn.tsx.patch"
   "$PATCH_DIR/packages_session-ui_src_components_message-part.tsx.patch"
   "$PATCH_DIR/packages_session-ui_src_components_apply-patch-file.ts.patch"
   "$PATCH_DIR/packages_session-ui_src_components_apply-patch-file.test.ts.patch"
   "$PATCH_DIR/packages_app_src_pages_session_timeline_message-timeline.tsx.patch"
-  "$PATCH_DIR/packages_app_src_pages_session_timeline_rows.ts.patch"
-  "$PATCH_DIR/packages_app_e2e_utils_mock-server.ts.patch"
 )
 
 ALL_OK=true
@@ -97,18 +96,17 @@ else
   echo "3. git commit -m \"fix: prepare diffs off the render thread (#31309)\""
 fi
 
-  # 7. Regenerate patches and update for future rebases (uses 3-way merge + rerere)
-  echo ""
-  echo "=== Regenerating patches for future rebases ==="
-  git checkout "$OLD_BRANCH" -- "$PATCH_DIR" 2>/dev/null || true
-  git diff "upstream/dev" -- \
-    packages/session-ui/src/components/ \
-    packages/app/src/pages/session/ \
-    packages/ui/package.json \
-    packages/app/e2e/utils/mock-server.ts \
-    > "$PATCH_DIR/complete-fix.patch"
-  git add -A
-  git commit -m "chore(custom): update patch files and regenerate complete-fix.patch" || true
+# 7. Regenerate patches and update for future rebases
+echo ""
+echo "=== Regenerating patches for future rebases ==="
+git checkout "$OLD_BRANCH" -- "$PATCH_DIR" 2>/dev/null || true
+git diff "$NEW_TAG" -- \
+  packages/session-ui/src/components/ \
+  packages/app/src/pages/session/ \
+  packages/ui/package.json \
+  > "$PATCH_DIR/complete-fix.patch"
+git add -A
+git commit -m "chore(custom): update patch files and regenerate complete-fix.patch" || true
 echo ""
 echo "NOTE: If patches conflict, resolve conflict markers in the affected files,"
 echo "then run: git add -A && git commit -m \"fix: prepare diffs off the render thread (#31309, #30441)\""

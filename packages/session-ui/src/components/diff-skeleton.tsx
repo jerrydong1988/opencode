@@ -1,4 +1,4 @@
- import { For, type JSX } from "solid-js"
+import { For, type JSX } from "solid-js"
 
 export function DiffSkeleton(props: { lines: number }): JSX.Element {
   const count = Math.min(props.lines, 50)

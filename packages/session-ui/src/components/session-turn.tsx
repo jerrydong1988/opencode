@@ -23,9 +23,9 @@ import { Icon } from "@opencode-ai/ui/icon"
 import { TextShimmer } from "@opencode-ai/ui/text-shimmer"
 import { SessionRetry } from "./session-retry"
 import { TextReveal } from "@opencode-ai/ui/text-reveal"
- import { createAutoScroll } from "@opencode-ai/ui/hooks"
- import { useI18n } from "@opencode-ai/ui/context/i18n"
- import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
+import { createAutoScroll } from "@opencode-ai/ui/hooks"
+import { useI18n } from "@opencode-ai/ui/context/i18n"
+import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
 
 function SessionTurnDiffView(props: { diff: SnapshotFileDiff & { file: string } }) {
   const fileComponent = useFileComponent()
@@ -454,10 +454,7 @@ export function SessionTurn(
                 >
                   <div data-slot="session-turn-diffs-header">
                     <span data-slot="session-turn-diffs-label">
-                      {i18n.t(
-                        edited() === 1 ? "ui.sessionTurn.diffs.changed.one" : "ui.sessionTurn.diffs.changed.other",
-                        { count: String(edited()) },
-                      )}
+                      {i18n.plural("ui.sessionTurn.diffs.changed", edited())}
                     </span>
                     <DiffChanges changes={diffs()} />
                     <Show when={overflow() > 0}>

@@ -1,8 +1,8 @@
 # OpenCode Desktop - Custom Frozen Fix Build
 
-> **Purpose:** Temporary fork of [anomalyco/opencode](https://github.com/anomalyco/opencode) with two unmerged renderer-freeze fixes, until they land in an official release.
+> **Purpose:** Temporary fork of [anomalyco/opencode](https://github.com/anomalyco/opencode) with an unmerged renderer-freeze fix, until an equivalent fix lands in an official release.
 >
-> **Branch:** `custom-frozen-fix-v9` (based on `upstream/dev`)
+> **Branch:** `custom-frozen-fix-v9` (aligned to the latest official release)
 >
 > **Maintainer:** jerrydong1988
 
@@ -12,12 +12,11 @@
 
 OpenCode Desktop freezes on Windows when working with large file diffs (e.g., C++ projects like `llama.cpp`). The root cause is `execEditLength` running synchronously on the UI render thread during diff computation.
 
-Two PRs fix this but have **not yet been merged** upstream:
+The remaining custom fix has **not yet been merged** upstream:
 
 | PR | Author | Fix | Status |
 |:---|:-------|:----|:------:|
-| [#31309](https://github.com/anomalyco/opencode/pull/31309) | Hona | Move diff parsing to Web Worker off the UI thread (233ms ? 66ms frame gap) | **OPEN** |
-| [#30441](https://github.com/anomalyco/opencode/pull/30441) | stanlymt | Fix O(n?) dedup in `constructMessageRows` (Set-based, 25k diffs in <1s) | **OPEN** |
+| [#31309](https://github.com/anomalyco/opencode/pull/31309) | Hona | Move diff parsing to a Web Worker off the UI thread | **OPEN** |
 
 ---
 
@@ -28,16 +27,15 @@ Two PRs fix this but have **not yet been merged** upstream:
 - New files: `packages/ui/src/diff/*` (7 files: worker, protocol, client, resource, etc.)
 - Modified files: `packages/session-ui/src/components/*` (5 components), `packages/ui/package.json`
 
-### 2. PR #30441 - `fix(app): avoid O(n^2) dedup hang on large diff summaries`
-- Replaces `reduceRight` + `result.some()` with a `Set` for O(n) dedup.
-- Modified files: `packages/app/src/pages/session/timeline/rows.ts`
-- New files: `packages/app/src/pages/session/message-timeline.diffs.ts` + test
+### Officially covered behavior
+- The official release now performs linear `Set`-based summary deduplication.
+- No custom dedup patch is carried; this fork is limited to diff preparation off the renderer thread.
 
 ---
 
 ## Maintenance Approach (Patch Overlay Strategy)
 
-**Problem:** Cherry-picking the two PR commits directly onto each new upstream version creates merge conflicts, because the files they modify are actively changing upstream (V2 UI migration).
+**Problem:** Cherry-picking the renderer-thread fix directly onto each new upstream version creates merge conflicts, because the consumer files are actively changing upstream.
 
 **Solution:** Use a **patch overlay** strategy:
 
@@ -123,7 +121,7 @@ This build uses the official publish config:
 publish: { provider: "github", owner: "anomalyco", repo: "opencode", channel: "latest" }
 ```
 
-When the upstream eventually merges both fixes and publishes a new release, the auto-updater will:
+When the upstream publishes PR #31309 or an equivalent fix, the auto-updater will:
 1. Detect the new version (via `latest.yml` on `anomalyco/opencode` releases)
 2. Prompt "Update vX.Y.Z downloaded. Restart now?"
 3. On restart, replace this custom build with the official release
@@ -134,7 +132,7 @@ When the upstream eventually merges both fixes and publishes a new release, the 
 
 ## Switching Back to Official (Manual)
 
-Once both PRs are merged, simply uninstall this custom version and download the official release from https://opencode.ai/download. All sessions and config are preserved.
+Once the released official version includes the renderer-thread fix, simply uninstall this custom version and download the official release from https://opencode.ai/download. All sessions and config are preserved.
 
 ---
 
@@ -152,5 +150,4 @@ Once both PRs are merged, simply uninstall this custom version and download the 
 ### Rebase script fails with "not found" errors
 - Ensure you are on the correct branch (`custom-frozen-fix-*`)
 - Ensure the tag exists: `git fetch upstream --tags`
-
 

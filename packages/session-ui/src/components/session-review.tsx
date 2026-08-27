@@ -29,7 +29,7 @@ import { DiffSkeleton } from "./diff-skeleton"
 
 import { createPreparedDiff } from "@opencode-ai/ui/diff/resource"
 import { prewarm } from "@opencode-ai/ui/diff/client"
- 
+
 const MAX_DIFF_CHANGED_LINES = 500
 const MAX_ABSOLUTE_DIFF_LINES = 5000
 
