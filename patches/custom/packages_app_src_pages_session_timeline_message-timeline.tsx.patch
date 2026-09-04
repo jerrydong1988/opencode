@@ -1,5 +1,5 @@
 diff --git a/packages/app/src/pages/session/timeline/message-timeline.tsx b/packages/app/src/pages/session/timeline/message-timeline.tsx
-index 18a153d299..db2e5836d6 100644
+index e083882557..9805fdcffd 100644
 --- a/packages/app/src/pages/session/timeline/message-timeline.tsx
 +++ b/packages/app/src/pages/session/timeline/message-timeline.tsx
 @@ -56,7 +56,7 @@ import { showToast } from "@/utils/toast"
