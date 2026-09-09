@@ -1,6 +1,6 @@
-## Required Reading
+## References when needed
 
-- Before writing, changing, or reviewing E2E tests, ALWAYS read and follow Playwright's official [Best Practices](https://playwright.dev/docs/best-practices), [Auto-waiting](https://playwright.dev/docs/actionability), and [Assertions](https://playwright.dev/docs/test-assertions) guides.
+- When changing test structure, readiness, or assertions and the correct behavior is unclear, consult Playwright's [Best Practices](https://playwright.dev/docs/best-practices), [Auto-waiting](https://playwright.dev/docs/actionability), or [Assertions](https://playwright.dev/docs/test-assertions) guide as relevant. Reuse established project patterns for routine changes.
 - Use the official [Locators](https://playwright.dev/docs/locators), [Network](https://playwright.dev/docs/network), and [Test Isolation](https://playwright.dev/docs/browser-contexts) guides when those concerns apply.
 
 ## Test Hygiene

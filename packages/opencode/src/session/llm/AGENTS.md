@@ -8,19 +8,7 @@ This folder contains adapters behind that service boundary:
 - `native-request.ts` converts opencode's normalized session input into a native `@opencode-ai/llm` `LLMRequest`. It does not execute requests.
 - `native-runtime.ts` is the opt-in native runtime adapter. It decides whether a selected model is supported, builds the native request, bridges opencode tools into native executable tools, and delegates transport to `LLMClient` / `RequestExecutor`.
 
-## File Structure
-
-```txt
-src/session/
-  llm.ts                    session-owned orchestration and runtime selection
-  llm/
-    AGENTS.md               boundary notes for the adapter layer
-    ai-sdk.ts               AI SDK fullStream -> @opencode-ai/llm LLMEvent adapter
-    native-request.ts       opencode/AI SDK-shaped input -> @opencode-ai/llm LLMRequest
-    native-runtime.ts       native runtime gate, tool bridge, and LLMClient handoff
-```
-
-Integration points:
+## Integration boundaries
 
 - `../llm.ts` imports `LLMClient` from `@opencode-ai/llm/route`; native execution is the only path that calls it directly.
 - `../llm.ts` imports `LLMAISDK` from `./llm/ai-sdk`; the AI SDK path still calls `streamText(...)` locally, then adapts `result.fullStream` into shared `LLMEvent`s.
@@ -34,51 +22,6 @@ Keep new integration code on one of these seams. Avoid importing session service
 ## Runtime selection
 
 Both runtimes converge on the same `LLMEvent` stream consumed by the session processor. The gate is per-request: a single session can route some calls through native and fall back for others.
-
-```txt
-                             ╭───────────────────╮
-╭───────────────────────────▶│ session processor │
-│                            ╰─────────┬─────────╯
-│                                      │
-│                                      │
-│                                      │
-│                                      ▼
-│                         ╭─────────────────────────╮
-│                         │ LLM.Service (../llm.ts) │
-│                         ╰────────────┬────────────╯
-│                                      │
-│                                      │
-│                                      │
-│                                      ▼
-│                                ╭───────────╮
-│                              ╭─╯           ╰─╮
-│                              │  native gate  │
-│                              ╰─╮           ╭─╯
-│                                ╰─────┬─────╯
-│                                      │
-│                     ╭────── no ──────┴─────── yes ────────╮
-│                     │                                     │
-│                     ▼                                     ▼
-│       ╭───────────────────────────╮             ╭───────────────────╮
-│       │          AI SDK           │             │ native-runtime.ts │
-│       │ streamText / generateText │             ╰────────┬──────────╯
-│       ╰─────────────┬─────────────╯                      │
-│                     │                                    │
-│                 ╭───╯                                    │
-│                 │                                        │
-│                 ▼                                        ▼
-│     ╭───────────────────────╮             ╭────────────────────────────╮
-│     │       ai-sdk.ts       │             │     native-request.ts      │
-│     │ fullStream → LLMEvent │             │ session input → LLMRequest │
-│     ╰──────────┬────────────╯             ╰──────────────┬─────────────╯
-│                │                                         │
-│                │                                     ╭───╯
-│                │                                     │
-│                ▼                                     ▼
-│       ╭─────────────────╮             ╭─────────────────────────────╮
-╰───────┤ LLMEvent stream │◀────────────┤ LLMClient · RequestExecutor │
-        ╰─────────────────╯             ╰─────────────────────────────╯
-```
 
 `native-runtime.ts` evaluates the gate and either bridges into `@opencode-ai/llm` or returns control so `llm.ts` can take the AI SDK path. Tool execution stays opencode-owned in both branches; only request lowering and transport differ.
 
