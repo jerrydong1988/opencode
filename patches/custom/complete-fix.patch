@@ -820,7 +820,7 @@ index ce5f0b545e..0bd8ba1c0c 100644
                                </Accordion.Content>
                              </Accordion.Item>
 diff --git a/packages/ui/package.json b/packages/ui/package.json
-index 28dbce9eca..a517d1e0f5 100644
+index 49d6d7d130..4c1bb76418 100644
 --- a/packages/ui/package.json
 +++ b/packages/ui/package.json
 @@ -35,6 +35,8 @@
